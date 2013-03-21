@@ -1,0 +1,17 @@
+<div class="navbar navbar-fixed-top top-menu navbar-inverse">
+	<div class="navbar-inner">
+    	<div class="container">
+        	<div class="nav-collapse collapse">
+	            <ul class="nav">
+                    <li><%= link_to "Home", :root %></li>
+                </ul>
+                <% if user_signed_in? %>
+                        <span class="label pull-right"> &nbsp; Welcome, <%= current_user.first_name %> ! &nbsp;
+                        <%= link_to('Logout', destroy_user_session_path, :method => :delete, :class => "btn") %> </span>
+                    <% else %>
+                    <%= link_to "Facebook Login #{image_tag('facebook.png')}".html_safe, user_omniauth_authorize_path(:facebook), :class => "pull-right" %>
+                    <% end %>
+            </div>
+        </div>
+    </div>
+</div>
