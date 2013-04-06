@@ -28,6 +28,8 @@ gem 'omniauth-facebook'
 
 gem 'jquery-rails'
 
+gem 'rb-readline'
+
 group :development do
 	gem 'pry'
 	gem 'pry-debugger'
