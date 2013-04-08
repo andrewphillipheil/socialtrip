@@ -14,3 +14,8 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+
+
+$(function(){
+  $(".datepicker").datepicker({dateFormat: "dd/mm/yy" });
+});

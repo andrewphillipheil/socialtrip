@@ -1,9 +1,9 @@
 Socialtrip::Application.routes.draw do
   get "welcome/index"
 
-match '/users/auth/facebook' => 'users/omniauth_callbacks#facebook'
+  match '/users/auth/facebook' => 'users/omniauth_callbacks#facebook'
 
- devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -17,6 +17,8 @@ match '/users/auth/facebook' => 'users/omniauth_callbacks#facebook'
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+
+  resources :trips
 
   # Sample resource route with options:
   #   resources :products do

@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
 
   has_many :providers
 
+  has_many :trips
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 

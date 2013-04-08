@@ -1,0 +1,15 @@
+<ul>
+<% @trips.each do |trip| %>
+  <li>
+    <%= trip.name %>
+    <%= trip.destination %>
+    <%= trip.start_date %>
+    <%= trip.end_date %>
+    <%= trip.description %>
+    <%= link_to "Edit", edit_trip_path(trip)  %>
+    <%= link_to "Destroy", trip_path(trip), :method => :delete, :confirm => 'Are you sure?'  %>
+  </li>
+<% end %>
+</ul>
+
+<%= link_to "Create new trip", new_trip_path %>

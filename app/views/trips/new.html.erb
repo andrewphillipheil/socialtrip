@@ -1,0 +1,27 @@
+<%= form_for @trip do |f| %>
+
+  <% if @trip.errors.any? %>
+    <ul style="color:red;">
+      <% @trip.errors.full_messages.each do |err_msg| %>
+        <li><%= err_msg  %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= f.label :name %>
+  <%= f.text_field :name %><br />
+
+  <%= f.label :destination %>
+  <%= f.text_field :destination %><br />
+
+  <%= f.label :start_date %>
+  <%= f.text_field :start_date, :class => "datepicker", :readonly => true %><br />
+
+  <%= f.label :end_date %>
+  <%= f.text_field :end_date, :class => "datepicker", :readonly => true %><br />
+
+  <%= f.label :description %>  
+  <%= f.text_area :description, :class => "field span5", :id => "textarea", :rows => "8" %><br />
+
+  <%= f.submit %>
+<% end %>
