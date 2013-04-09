@@ -2,6 +2,8 @@ Socialtrip::Application.routes.draw do
   get "welcome/index"
 
   match '/users/auth/facebook' => 'users/omniauth_callbacks#facebook'
+  
+  match '/welcome/authorize' => 'welcome#authorize'
 
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   # The priority is based upon order of creation:

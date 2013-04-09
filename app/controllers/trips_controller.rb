@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_filter :initialize_trip, :only => [:new, :create]
-  before_filter :load_trip, :only => [:edit, :destroy]
+  before_filter :load_trip, :only => [:edit, :destroy, :show]
 
   def index
     @trips = current_user.trips
@@ -29,7 +29,7 @@ class TripsController < ApplicationController
   private
 
     def initialize_trip
-      @trip = current_user.trips.new(params[:trip])
+      @trip = current_user.trips.new(params[:id])
     end
 
     def load_trip
