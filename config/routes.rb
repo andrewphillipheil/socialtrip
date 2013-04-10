@@ -1,6 +1,8 @@
 Socialtrip::Application.routes.draw do
   get "welcome/index"
 
+  post "welcome/authorize"
+
   match '/users/auth/facebook' => 'users/omniauth_callbacks#facebook'
   
   match '/welcome/authorize' => 'welcome#authorize'

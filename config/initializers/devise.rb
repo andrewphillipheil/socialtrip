@@ -213,7 +213,7 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :facebook, API_CONFIG["facebook_key"], API_CONFIG["facebook_secret"]
+  config.omniauth :facebook, API_CONFIG["facebook_key"], API_CONFIG["facebook_secret"], :iframe => true
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
