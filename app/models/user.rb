@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
 
   has_many :trips
 
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :invitable, :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :invite_for => 2.weeks
 
-  devise :omniauthable, :omniauth_providers => [:facebook]
+  devise :invitable, :omniauthable, :omniauth_providers => [:facebook]
 
   attr_accessor :auth_hash
 

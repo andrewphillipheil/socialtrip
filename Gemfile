@@ -24,7 +24,11 @@ group :assets do
 end
 
 gem 'devise'
+
+gem 'devise_invitable'
+
 gem 'omniauth'
+
 gem 'omniauth-facebook'
 
 gem 'jquery-rails'

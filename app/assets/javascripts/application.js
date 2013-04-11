@@ -19,3 +19,16 @@
 $(function(){
   $(".datepicker").datepicker({dateFormat: "dd/mm/yy" });
 });
+
+$(function(){
+  FB.init({
+    appId: '129652407201708',
+    cookie: false,
+    status: true,
+    xfbml  : true
+  });
+          
+  $('a#invite_fb_friends').click(function(){
+    FB.ui({ method: 'apprequests', message: '<%= current_user.first_name %> <%=current_user.last_name %> has invited you use the Socialtrip' });                    
+  });
+});

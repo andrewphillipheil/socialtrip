@@ -1,24 +1,34 @@
-<% if current_user %>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
+
+<table class='table table-striped table-bordered table-condensed'>
+  <tr>
+    <td>Name:</td>
+    <td><%= @trip.name %></td>
+  </tr> 
+  <tr>
+    <td>Destination:</td>
+    <td><%= @trip.destination %></td>
+  </tr>
+  <tr>
+    <td>Start Date:</td>
+    <td><%= @trip.start_date %></td>
+  </tr>
+  <tr>
+    <td>End Date:</td>
+    <td><%= @trip.end_date %></td>
+  </tr>
+  <tr>
+    <td>Description:</td>
+    <td><%= @trip.description %></td>
+  </tr>
+  <tr>
+</table>
+
+
+<% if user_signed_in? %>
   <div id='friends'>
     <p><%= link_to  "Invite your facebook friends", '#', :id => 'invite_fb_friends' %></p>
     
     <div id='fb-root'></div>
-    
-    <script src="http://connect.facebook.net/en_US/all.js"></script>
-    
-    <script>
-      $(function(){
-        FB.init({
-          appId: '129652407201708',
-          cookie: false,
-          status: true,
-          xfbml  : true
-        });
-                
-        $('a#invite_fb_friends').click(function(){
-          FB.ui({ method: 'apprequests', message: '<%= current_user.first_name %> <%=current_user.last_name %> has invited you use the Socialtrip' });                    
-        });
-      });
-    </script>
   </div>
 <% end %>

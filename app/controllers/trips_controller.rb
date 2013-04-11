@@ -29,7 +29,7 @@ class TripsController < ApplicationController
   private
 
     def initialize_trip
-      @trip = current_user.trips.new(params[:id])
+      @trip = current_user.trips.new(params[:trip])
     end
 
     def load_trip
