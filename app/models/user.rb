@@ -8,16 +8,16 @@ class User < ActiveRecord::Base
   has_many :trips
 
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :invite_for => 2.weeks
+         :recoverable, :rememberable, :trackable, :validatable, :invite_for => 0
 
-  devise :invitable, :omniauthable, :omniauth_providers => [:facebook]
+  devise :omniauthable, :omniauth_providers => [:facebook]
 
   attr_accessor :auth_hash
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :remember_me, :provider, :uid, :first_name, :last_name, :auth_hash
 
-  after_create :associate_provider
+  after_create :associate_provider, :if => Proc.new { |u| u.auth_hash }
   # attr_accessible :title, :body
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     user = Provider.where(:user_provider => auth.provider, :uid => auth.uid).first.try(:user)

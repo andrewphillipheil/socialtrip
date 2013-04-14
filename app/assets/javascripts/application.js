@@ -18,17 +18,12 @@
 
 $(function(){
   $(".datepicker").datepicker({dateFormat: "dd/mm/yy" });
-});
 
-$(function(){
-  FB.init({
-    appId: '129652407201708',
-    cookie: false,
-    status: true,
-    xfbml  : true
+  $('#email_ids').tagsInput({
+    'defaultText':'Enter comma seprated email ids',
+    'width' : '500px',
+    'height' : '170px'
   });
-          
-  $('a#invite_fb_friends').click(function(){
-    FB.ui({ method: 'apprequests', message: '<%= current_user.first_name %> <%=current_user.last_name %> has invited you use the Socialtrip' });                    
-  });
+
+  $('#email_ids_tag').width('190px');
 });

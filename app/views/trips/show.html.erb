@@ -30,5 +30,20 @@
     <p><%= link_to  "Invite your facebook friends", '#', :id => 'invite_fb_friends' %></p>
     
     <div id='fb-root'></div>
+
+    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path %></div>
   </div>
 <% end %>
+
+<script>
+  FB.init({
+    appId: '129652407201708',
+    cookie: false,
+    status: true,
+    xfbml  : true
+  });
+
+  $('a#invite_fb_friends').click(function(){
+    FB.ui({ method: 'apprequests', message: '<%= current_user.first_name %> <%=current_user.last_name %> has invited you use the Socialtrip' });                    
+  });
+</script>
