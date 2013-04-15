@@ -1,7 +1,7 @@
 class Trip < ActiveRecord::Base
   attr_accessible :user_id, :name, :destination, :start_date, :end_date, :description
 
-  belongs_to :user
+  has_many :users, :through => :invitations
 
   validates_presence_of :name, :destination, :description, :start_date, :end_date, :user_id
 
@@ -19,6 +19,6 @@ class Trip < ActiveRecord::Base
     end
 
     def parse_end_date
-      self.end_date = start_date.to_date.to_s(:mysql_format)
+      self.end_date = end_date.to_date.to_s(:mysql_format)
     end    
 end

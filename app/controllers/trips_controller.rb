@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_filter :initialize_trip, :only => [:new, :create]
-  before_filter :load_trip, :only => [:edit, :destroy, :show]
+  before_filter :load_trip, :only => [:edit, :destroy, :show, :update]
 
   def index
     @trips = current_user.trips
@@ -21,9 +21,17 @@ class TripsController < ApplicationController
   def edit; end
 
   def update
+    if @trip.update_attributes(params[:trip])
+      redirect_to trip_path(@trip)
+    else
+      render :edit
+    end
   end
 
   def destroy
+    if @trip.destroy
+      redirect_to trips_path
+    end
   end
 
   private

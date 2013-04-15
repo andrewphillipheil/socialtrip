@@ -5,6 +5,8 @@
 			<div class="user-actions pull-right">
 				<% if user_signed_in? %>
 				  Welcome To SocialTrip
+          <br/>
+          <%= link_to "Manage Trips", trips_path %>
 				<%else%>
 				  <%= link_to "Sign In", new_user_session_path %>
           <%= link_to "Sign Up", new_user_registration_path %>

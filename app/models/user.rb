@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
 
   has_many :providers
 
-  has_many :trips
+  has_many :trips, :through => :invitations
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :invite_for => 0
