@@ -27,6 +27,8 @@ gem 'devise'
 
 gem 'devise_invitable'
 
+gem 'fb_graph'
+
 gem 'omniauth'
 
 gem 'omniauth-facebook'

@@ -3,12 +3,13 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
 
-  has_many :providers
+  has_many :providers, :dependent => :destroy
 
   has_many :trips, :through => :invitations
 
-  devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :invite_for => 0
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :invitable, :invite_for => 0
+
 
   devise :omniauthable, :omniauth_providers => [:facebook]
 
@@ -35,7 +36,7 @@ class User < ActiveRecord::Base
   private
 
     def associate_provider
-      provider = providers.build(:user_provider => auth_hash.provider, :uid => auth_hash.uid)
+      provider = providers.build(:user_provider => auth_hash.provider, :uid => auth_hash.uid, :token => auth_hash.credentials.token)
       provider.save
     end
 end

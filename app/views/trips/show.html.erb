@@ -32,22 +32,77 @@
 <% if user_signed_in? %>
   <div id='friends'>
     <p><%= link_to  "Invite your facebook friends", '#', :id => 'invite_fb_friends' %></p>
+
+    <%= text_field_tag :invite_friends, nil, :id => 'fb-friends', :placeholder => "Type in friend's name" %>
     
     <div id='fb-root'></div>
 
-    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path %></div>
+    <div id='email-invitation'><%#= link_to  "Invite friends to this trip", new_user_invitation_path %></div>
   </div>
 <% end %>
 
 <script>
-  FB.init({
-    appId: '129652407201708',
-    cookie: false,
-    status: true,
-    xfbml  : true
+  $(function(){
+    FB.init({
+      appId: '129652407201708',
+      cookie: false,
+      status: true,
+      xfbml : true
+    });
+
+    $('#fb-friends').hide();
+
+    $('a#invite_fb_friends').click(function(){
+      $.ajax({
+        url: "https://graph.facebook.com/100000371776917/friends?fields=name,picture&access_token=<%= current_user.providers.first.token %>",
+        method: 'get',
+        dataType: 'json',
+
+        success: function(friends, textStatus, jqXHR){
+          if(jqXHR.status == 200){
+            $('#fb-friends').show();
+
+            friends_json = format_json(friends['data']);
+            
+            $( "#fb-friends" ).autocomplete({
+              source: friends_json,
+
+              select: function( event, ui ) {
+                FB.ui({method: 'apprequests',
+                  to: ui.item.uid,
+                  title: 'Invitation to trip',
+                  message: '<%= current_user.first_name %> added you to his trip to <%= @trip.destination %> on Socialtrip.com',
+                },
+
+                function(response){
+                  console.log(response);
+
+                  create_trip_request();
+                });                
+              }              
+            }).data( "autocomplete" )._renderItem = function( ul, item ) {
+              return $( "<li></li>" )
+              .data( "item.autocomplete", item ).val(item.uid)
+              .append( "<a><img src=" + item.profile_pic_url +  "><strong>" + item.label + "</strong></a>" )
+              .appendTo( ul );
+            }
+          }
+        }
+      });
+    });
   });
 
-  $('a#invite_fb_friends').click(function(){
-    FB.ui({ method: 'apprequests', message: '<%= current_user.first_name %> <%=current_user.last_name %> has invited you use the Socialtrip' });                    
-  });
+  var format_json = function(fb_data){
+    formatted_json = []
+
+    $.each(fb_data, function(index, data){
+      formatted_json.push({"label" : data.name, "uid" : data.id, "profile_pic_url" : data.picture.data.url});
+    });
+
+    return formatted_json;
+  }
+
+  var create_trip_request = function(){
+    return true;
+  }
 </script>
