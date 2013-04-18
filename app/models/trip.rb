@@ -1,11 +1,14 @@
 class Trip < ActiveRecord::Base
   attr_accessible :user_id, :name, :destination, :start_date, :end_date, :description
 
+  has_many :invitations
   has_many :users, :through => :invitations
 
-  validates_presence_of :name, :destination, :description, :start_date, :end_date, :user_id
+  validates_presence_of :name, :destination, :description, :start_date, :end_date
 
   before_validation :parse_date_values
+
+  before_destroy :delete_associated_invitations
 
   private
 
@@ -20,5 +23,9 @@ class Trip < ActiveRecord::Base
 
     def parse_end_date
       self.end_date = end_date.to_date.to_s(:mysql_format)
-    end    
+    end
+
+    def delete_associated_invitations
+      invitations.destroy_all
+    end     
 end

@@ -37,7 +37,8 @@ class TripsController < ApplicationController
   private
 
     def initialize_trip
-      @trip = current_user.trips.new(params[:trip])
+      @trip = Trip.new(params[:trip])
+      @trip.invitations.build(:user_id => current_user.id)
     end
 
     def load_trip

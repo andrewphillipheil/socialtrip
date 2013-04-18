@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 
   has_many :providers, :dependent => :destroy
 
+  has_many :invitations
   has_many :trips, :through => :invitations
 
   devise :database_authenticatable, :registerable,
@@ -32,6 +33,14 @@ class User < ActiveRecord::Base
     end
     user
 	end
+
+  def has_signed_up_using_fb?
+    !!fb_token
+  end
+
+  def fb_token
+    providers.where(:user_provider => 'facebook').first.try(:token)
+  end
 
   private
 
