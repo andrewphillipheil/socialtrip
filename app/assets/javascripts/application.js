@@ -27,3 +27,7 @@ $(function(){
 
   $('#email_ids_tag').width('190px');
 });
+
+var set_csrf_token = function(xhr){
+  xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+}   

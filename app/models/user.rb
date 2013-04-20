@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   has_many :invitations
   has_many :trips, :through => :invitations
 
-  devise :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable, :token_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable, :invitable, :invite_for => 0
 
 
@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :remember_me, :provider, :uid, :first_name, :last_name, :auth_hash
 
   after_create :associate_provider, :if => Proc.new { |u| u.auth_hash }
+
+  after_create :associate_user_to_trip, :if => :invited?
   # attr_accessible :title, :body
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     user = Provider.where(:user_provider => auth.provider, :uid => auth.uid).first.try(:user)
@@ -38,9 +40,18 @@ class User < ActiveRecord::Base
     !!fb_token
   end
 
-  def fb_token
-    providers.where(:user_provider => 'facebook').first.try(:token)
+  def fb_provider
+    @provider ||= providers.where(:user_provider => 'facebook').first
   end
+
+  def fb_token
+    fb_provider.try(:token)
+  end
+
+  def fb_id
+    fb_provider.try(:uid)
+  end
+
 
   private
 
@@ -48,4 +59,17 @@ class User < ActiveRecord::Base
       provider = providers.build(:user_provider => auth_hash.provider, :uid => auth_hash.uid, :token => auth_hash.credentials.token)
       provider.save
     end
+
+    def invited?
+      !!invited_for_trip
+    end
+
+    def invited_for_trip
+      @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first
+    end    
+
+    def associate_user_to_trip
+      invite = invitations.build(:trip_id => invited_for_trip.trip_id)
+      invite.save
+    end    
 end

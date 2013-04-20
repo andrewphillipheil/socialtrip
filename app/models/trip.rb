@@ -2,6 +2,7 @@ class Trip < ActiveRecord::Base
   attr_accessible :user_id, :name, :destination, :start_date, :end_date, :description
 
   has_many :invitations
+  has_many :fb_invitees
   has_many :users, :through => :invitations
 
   validates_presence_of :name, :destination, :description, :start_date, :end_date
@@ -9,6 +10,23 @@ class Trip < ActiveRecord::Base
   before_validation :parse_date_values
 
   before_destroy :delete_associated_invitations
+
+  after_create :create_invitation
+
+  def invite!(invitee)
+    if user = Provider.user_exists?(invitee[:uid])
+      invite = invitations.build(:user_id => user.id)
+      invite.save
+    else
+      invitee = fb_invitees.build(:invitee_uid => invitee[:uid])
+      invitee.save
+    end
+  end
+
+  def invitee_already_present?(fb_id)
+    Rails.logger.info "*"*100
+    !!fb_invitees.where(:invitee_uid => fb_id).first ? nil : "No" 
+  end
 
   private
 
@@ -27,5 +45,5 @@ class Trip < ActiveRecord::Base
 
     def delete_associated_invitations
       invitations.destroy_all
-    end     
+    end
 end

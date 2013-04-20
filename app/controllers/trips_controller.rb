@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_filter :initialize_trip, :only => [:new, :create]
-  before_filter :load_trip, :only => [:edit, :destroy, :show, :update]
+  before_filter :load_trip, :only => [:edit, :destroy, :show, :update, :create_invitation]
 
   def index
     @trips = current_user.trips
@@ -31,6 +31,14 @@ class TripsController < ApplicationController
   def destroy
     if @trip.destroy
       redirect_to trips_path
+    end
+  end
+
+  def create_invitation
+    if @trip.invite!(params[:invitee])
+      render :json => {:status => 200}
+    else
+      render :json => {:status => 304}
     end
   end
 

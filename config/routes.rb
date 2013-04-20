@@ -25,7 +25,11 @@ Socialtrip::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  resources :trips
+  resources :trips do
+    member do
+      post 'create_invitation'
+    end
+  end
 
   # Sample resource route with options:
   #   resources :products do

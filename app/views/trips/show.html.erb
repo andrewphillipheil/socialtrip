@@ -1,4 +1,4 @@
-<script src="http://connect.facebook.net/en_US/all.js"></script>
+<%= javascript_include_tag "facebook_all" %>
 
 <table class='table table-striped table-bordered table-condensed'>
   <tr>
@@ -56,7 +56,7 @@
 
       $('a#invite_fb_friends').click(function(){
         $.ajax({
-          url: "https://graph.facebook.com/100000371776917/friends?fields=name,picture&access_token=<%= current_user.fb_token %>",
+          url: "https://graph.facebook.com/<%= current_user.fb_id %>/friends?fields=name,picture&access_token=<%= current_user.fb_token %>",
           method: 'get',
           dataType: 'json',
 
@@ -70,17 +70,12 @@
                 source: friends_json,
 
                 select: function( event, ui ) {
-                  FB.ui({method: 'apprequests',
-                    to: ui.item.uid,
-                    title: 'Invitation to trip',
-                    message: '<%= current_user.first_name %> added you to his trip to <%= @trip.destination %> on Socialtrip.com',
-                  },
-
-                  function(response){
-                    console.log(response);
-
-                    create_trip_request();
-                  });                
+                  alert("<%= @trip.invitee_already_present?("+ui.item.uid+") %>");
+                  if("<%= @trip.invitee_already_present?("+ui.item.uid+") %>"){
+                    alert("You have alredy invited "+ui.item.label+" to this trip.");
+                  }else{
+                    request.send_trip_request_on_fb(ui);
+                  }
                 }              
               }).data( "autocomplete" )._renderItem = function( ul, item ) {
                 return $( "<li></li>" )
@@ -94,6 +89,25 @@
       });
     });
 
+    var request = {
+      send_trip_request_on_fb : function(ui_hash) {
+        var ui = ui_hash;
+        FB.ui({method: 'apprequests',
+          to: ui_hash.item.uid,
+          title: 'Invitation to trip',
+          message: '<%= current_user.first_name %> added you to his trip to <%= @trip.destination %> on Socialtrip.com',
+        }, 
+        function(response){
+          if(response){
+            request.send_trip_request_on_app(ui);
+          }
+        });
+      },
+      send_trip_request_on_app : function(ui_hash) {
+        create_trip_request(ui_hash.item.uid, ui_hash.item.label);
+      }
+    }
+
     var format_json = function(fb_data){
       formatted_json = []
 
@@ -104,8 +118,23 @@
       return formatted_json;
     }
 
-    var create_trip_request = function(){
-      return true;
+    var create_trip_request = function(fb_uid, full_name){
+      $.ajax({
+        url: "<%= create_invitation_trip_path(@trip) %>",
+        method: 'post',
+        dataType: 'json',
+        data: {'invitee': {'uid': fb_uid, 'name': full_name}},
+
+        beforeSend: function(xhr) {
+          set_csrf_token(xhr);
+        },        
+
+        success: function(data, textStatus, jqXHR){
+          if(jqXHR.status == 200){
+
+          }
+        }
+      });
     }
   </script>
 <% end %>
