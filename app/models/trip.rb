@@ -24,8 +24,11 @@ class Trip < ActiveRecord::Base
   end
 
   def invitee_already_present?(fb_id)
-    Rails.logger.info "*"*100
-    !!fb_invitees.where(:invitee_uid => fb_id).first ? nil : "No" 
+    fb_invitees.where(:invitee_uid => fb_id).first ? nil : "No" 
+  end
+
+  def collect_uids
+    fb_invitees.collect(&:invitee_uid)
   end
 
   private
