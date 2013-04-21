@@ -37,7 +37,7 @@
       <%= text_field_tag :invite_friends, nil, :id => 'fb-friends', :placeholder => "Type in friend's name" %>
     <% end %>
 
-    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path %></div>
+    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path(:trip_id => @trip.id) %></div>
   </div>
 <% end %>
 

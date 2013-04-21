@@ -14,10 +14,10 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, :omniauth_providers => [:facebook]
 
-  attr_accessor :auth_hash
+  attr_accessor :auth_hash, :existing, :current_trip, :sender
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :remember_me, :provider, :uid, :first_name, :last_name, :auth_hash
+  attr_accessible :email, :password, :remember_me, :provider, :uid, :first_name, :last_name, :auth_hash, :existing, :current_trip, :sender
 
   after_create :associate_provider, :if => Proc.new { |u| u.auth_hash }
 
@@ -52,6 +52,28 @@ class User < ActiveRecord::Base
     fb_provider.try(:uid)
   end
 
+  def self.already_invited?(email)
+    where(:email => email).first
+  end
+
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def invite
+    invite = invitations.build(:trip_id => current_trip.id)    
+    send_invitation if invite.save
+  end
+
+  def send_invitation
+    ::Devise.mailer.send(:invitation_instructions, self).deliver
+  end
+
+  def set_trip_and_sender(trip, user)
+    self.current_trip = trip
+    self.sender = user    
+  end
+
 
   private
 
@@ -61,15 +83,27 @@ class User < ActiveRecord::Base
     end
 
     def invited?
-      !!invited_for_trip
+      !!invited_for_trip || !!invited_by_email?
     end
 
     def invited_for_trip
-      @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first
-    end    
+      @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first if auth_hash
+    end
+
+    def invited_by_email?
+      invitation_not_accepted?
+    end
+
+    def invitation_not_accepted?
+      invitation_token && !first_name
+    end 
 
     def associate_user_to_trip
-      invite = invitations.build(:trip_id => invited_for_trip.trip_id)
+      invite = if invitation_not_accepted?
+        invitations.build(:trip_id => Trip.first.id)
+      else
+        invitations.build(:trip_id => invited_for_trip.trip_id)
+      end
       invite.save
     end    
 end

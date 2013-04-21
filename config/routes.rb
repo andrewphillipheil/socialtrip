@@ -9,7 +9,15 @@ Socialtrip::Application.routes.draw do
   
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
-  devise_for :users, :controllers => { :invitations => 'users/invitations' }
+  # resources :invitations do
+  #   # post 'batch_invite'
+  # end
+
+  devise_for :users, :controllers => { :invitations => 'invitations' } do
+    post  "/users/invitation/batch_invite" => "invitations#batch_invite", :as => "batch_invitation"
+  end
+
+  # match "users/invitation/new" => "invitations#new", :via => :get
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
