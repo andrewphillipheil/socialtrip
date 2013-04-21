@@ -1,4 +1,4 @@
-<h2><%= t "devise.invitations.new.header" %></h2>
+<h2><%= t "devise.invitations.new.header" %></h2>(All invalid email ids will be rejected)
 
 <%= form_for resource, :as => resource_name, :url => batch_invitation_path, :html => {:method => :post} do |f| %>
   <%= f.hidden_field :trip_id, :value => params[:trip_id] %>

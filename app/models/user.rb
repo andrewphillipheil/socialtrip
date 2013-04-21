@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
+  class << self; attr_accessor :current_trip end
 
   has_many :providers, :dependent => :destroy
 
@@ -21,7 +22,7 @@ class User < ActiveRecord::Base
 
   after_create :associate_provider, :if => Proc.new { |u| u.auth_hash }
 
-  after_create :associate_user_to_trip, :if => :invited?
+  after_create :associate_user_to_trip, :if => :invited_for_trip
   # attr_accessible :title, :body
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     user = Provider.where(:user_provider => auth.provider, :uid => auth.uid).first.try(:user)
@@ -82,25 +83,14 @@ class User < ActiveRecord::Base
       provider.save
     end
 
-    def invited?
-      !!invited_for_trip || !!invited_by_email?
-    end
-
     def invited_for_trip
       @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first if auth_hash
     end
 
-    def invited_by_email?
-      invitation_not_accepted?
-    end
-
-    def invitation_not_accepted?
-      invitation_token && !first_name
-    end 
 
     def associate_user_to_trip
-      invite = if invitation_not_accepted?
-        invitations.build(:trip_id => Trip.first.id)
+      invite = if current_trip
+        invitations.build(:trip_id => User.current_trip.id)
       else
         invitations.build(:trip_id => invited_for_trip.trip_id)
       end

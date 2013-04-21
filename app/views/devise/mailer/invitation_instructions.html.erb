@@ -1,6 +1,6 @@
 <p>Hello <%= @resource.email %>!</p>
 
-<p><%= (@resource.sender || @resource.invited_by).full_name %> added you to his trip to <%= (@resource.current_trip || @resource.invited_by.invitations.last.trip).destination %> on <%= link_to "Socialtrip.com", root_url %><% unless @resource.existing %>, you can accept it through the link below.</p>
+<p><%= (@resource.sender || @resource.invited_by).full_name %> added you to his trip to <%= (@resource.current_trip || User.current_trip).destination %> on <%= link_to "Socialtrip.com", root_url %><% unless @resource.existing %>, you can accept it through the link below.</p>
 
 <p><%= link_to 'Accept invitation', accept_invitation_url(@resource, :invitation_token => @resource.invitation_token) %></p>
 
