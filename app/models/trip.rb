@@ -11,8 +11,6 @@ class Trip < ActiveRecord::Base
 
   before_destroy :delete_associated_invitations
 
-  after_create :create_invitation
-
   def invite!(invitee)
     if user = Provider.user_exists?(invitee[:uid])
       invite = invitations.build(:user_id => user.id)
