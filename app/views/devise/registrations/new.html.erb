@@ -1,21 +1,18 @@
-<h2>Sign up</h2>
+<div class="offset4 span4">
+  <div class="well sign-in margin100">
+    <h4>Sign up</h4>
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
+      <%= f.text_field :first_name, :placeholder => "First Name", :class => "input-block-level" %>
+      <%= f.text_field :last_name, :placeholder => "Last Name", :class => "input-block-level" %>
+      <%= f.email_field :email, :placeholder => "Email address", :class => "input-block-level" %>
+      <%= f.password_field :password, :placeholder => "Password", :class => "input-block-level" %>
+      <%= f.password_field :password_confirmation, :placeholder => "Retype", :class => "input-block-level" %>
 
-  <div><%= f.label :first_name %><br />
-  <%= f.text_field :first_name %></div>
-
-  <div><%= f.label :last_name %><br />
-  <%= f.text_field :last_name %></div>
-
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
-
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
-
-  <div><%= f.submit "Sign up" %></div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+      <div><%= f.submit "Sign up", :class => "btn btn-primary" %></div>
+      
+    <% end %>
+    <%= render :partial => "devise/shared/links" %>
+  </div>
+</div>
