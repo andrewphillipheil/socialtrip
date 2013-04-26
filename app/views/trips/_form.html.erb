@@ -23,5 +23,5 @@
   <%= f.label :description %>  
   <%= f.text_area :description, :class => "field span5", :id => "textarea", :rows => "8" %><br />
 
-  <%= f.submit %>
+  <%= f.submit "#{@trip.new_record? ? "Create" : "Update"} Trtp", class: "btn btn-primary"  %>
 <% end %>
