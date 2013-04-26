@@ -1,14 +1,13 @@
-
-	<div class="hero-unit margin100">
-	  <h1>Welcome to Tripize</h1>
-	  <p>Tourize.com</p>
-	  <p>
-	  	<% unless user_signed_in? %>
-		  	<a class="btn btn-primary btn-large" heef="#">Learn more</a>
-			<% else %>
-				<%= link_to "Manage Trips", trips_path, class: "btn btn-primary btn-large" %>
-			<% end %>		  	
-	  </p>
-  </div>
+<div class="hero-unit margin100">
+  <h1>Welcome to Tripize</h1>
+  <p>Tourize.com</p>
+  <p>
+  	<% unless user_signed_in? %>
+	  	<a class="btn btn-primary btn-large" heef="#">Learn more</a>
+		<% else %>
+			<%= link_to "Manage Trips", trips_path, class: "btn btn-primary btn-large" %>
+		<% end %>		  	
+  </p>
+</div>
 
 

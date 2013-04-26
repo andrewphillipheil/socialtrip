@@ -14,14 +14,15 @@
             <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
             <i class='icon-adjust'></i>
             </a>
-            <ul class='dropdown-menu'>
-              <li>
-                <a class='change-color-to-red' href='#'>
-                  <i class='icon-adjust text-error'></i>
-                  Default (Red)
-                </a>
-              </li>
-            </ul>
+            <% if @trips %>
+              <ul class='dropdown-menu'>
+                <li>
+                  <% @trips.each do |trip| %>
+                    <%= link_to "<i class='icon-adjust text-error'></i> #{trip.name}".html_safe, trip %>
+                  <% end %>
+                </li>
+              </ul>
+            <% end %>
           </li>
           <!-- color change end -->
 
@@ -29,7 +30,7 @@
           <li class='dropdown second only-icon widget'>
             <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
               <i class='icon-rss'></i>
-              <div class='label'>5</div>
+              <div class='label'></div>
             </a>
             <ul class='dropdown-menu'>
               <li>

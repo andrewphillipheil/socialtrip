@@ -52,4 +52,5 @@ class TripsController < ApplicationController
     def load_trip
       @trip = current_user.trips.where(:id => params[:id]).first
     end
+    
 end
