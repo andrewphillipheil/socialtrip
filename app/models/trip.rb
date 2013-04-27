@@ -16,7 +16,7 @@ class Trip < ActiveRecord::Base
       invite = invitations.build(:user_id => user.id)
       invite.save
     else
-      invitee = fb_invitees.build(:invitee_uid => invitee[:uid])
+      invitee = fb_invitees.build(:invitee_uid => invitee[:uid], :name => invitee[:name])
       invitee.save
     end
   end
@@ -27,6 +27,14 @@ class Trip < ActiveRecord::Base
 
   def collect_uids
     fb_invitees.collect(&:invitee_uid)
+  end
+
+  def mail_invitees
+    users.select{|u| u.providers.where(:user_provider => 'facebook').empty?}.uniq_by(&:email)
+  end
+
+  def facebook_invitees_name
+    (users.select{|u| u.providers.where(:user_provider => 'facebook').present?}.collect(&:full_name) + FbInvitee.where(:trip_id => id).collect(&:name)).uniq
   end
 
   private

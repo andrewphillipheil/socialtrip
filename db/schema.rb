@@ -11,11 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130420054928) do
+ActiveRecord::Schema.define(:version => 20130427110409) do
 
   create_table "fb_invitees", :force => true do |t|
     t.integer "trip_id"
     t.string  "invitee_uid"
+    t.string  "name"
   end
 
   create_table "invitations", :force => true do |t|

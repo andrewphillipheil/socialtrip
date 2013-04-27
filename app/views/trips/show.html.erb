@@ -32,14 +32,30 @@
 <% if user_signed_in? %>
   <div id='friends'>
     <% if current_user.has_signed_up_using_fb?  %>
-      <p><%= link_to  "Invite your facebook friends", '#', :id => 'invite_fb_friends' %></p>
+      <p><%= link_to  "Invite your facebook friends", 'javascript:void', :id => 'invite_fb_friends' %></p>
 
       <%= text_field_tag :invite_friends, nil, :id => 'fb-friends', :placeholder => "Type in friend's name" %>
     <% end %>
 
-    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path(:trip_id => @trip.id) %></div>
+    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path(:trip_id => @trip.id), :id => 'invite_by_email' %></div>
   </div>
 <% end %>
+
+
+<div class="mail_invitees">
+  <h3>Email Invitees</h3>
+  <% @trip.mail_invitees.each do |user| %>
+    <%= user.email %>
+  <% end %>
+</div>
+
+
+<div class="facebook_invitees">
+  <h3>FB Invitees</h3>
+  <% @trip.facebook_invitees_name.each do |name| %>
+    <%= name %>
+  <% end %>
+</div>
 
 
 <% if current_user.has_signed_up_using_fb?  %>
@@ -87,6 +103,10 @@
             }
           }
         });
+      });
+
+      $('#invite_by_email').click(function(){
+        
       });
     });
 

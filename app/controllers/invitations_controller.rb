@@ -4,10 +4,15 @@ class InvitationsController < Devise::InvitationsController
 
     if params[:user][:email].present?
       params[:user][:email].split(",").flatten.each do |email|
-        if self.resource = (email && resource_class.already_invited?(email))
+        if self.resource = (email && resource_class.user_present?(email))
           resource.set_trip_and_sender(trip, current_inviter)
           resource.existing = true
-          resource.invite
+                    
+          if resource.already_invited?(trip)
+            resource.send_invitation
+          else
+            resource.invite
+          end
         else
           User.current_trip = trip
           self.resource = resource_class.invite!({:email => email}, current_inviter)
@@ -18,7 +23,6 @@ class InvitationsController < Devise::InvitationsController
       end
       respond_with resource, :location => after_invite_path_for(resource)
     else
-      # redirect_to new_user_invitation_path, :error => "Please enter"
       self.resource = resource_class.invite!({:email => params[:user][:email]}, current_inviter)
       render :new
     end  

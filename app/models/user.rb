@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
   class << self; attr_accessor :current_trip end
 
   has_many :providers, :dependent => :destroy
-
   has_many :invitations
   has_many :trips, :through => :invitations
 
@@ -27,7 +26,7 @@ class User < ActiveRecord::Base
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     user = Provider.where(:user_provider => auth.provider, :uid => auth.uid).first.try(:user)
     unless user
-     user = User.create(email:auth.info.email,
+      user = User.create(email:auth.info.email,
                         first_name: auth.extra.raw_info.first_name,
         				        last_name: auth.extra.raw_info.last_name,
                         password:Devise.friendly_token[0,20],
@@ -53,8 +52,12 @@ class User < ActiveRecord::Base
     fb_provider.try(:uid)
   end
 
-  def self.already_invited?(email)
+  def self.user_present?(email)
     where(:email => email).first
+  end
+
+  def already_invited?(trip)
+    invitations.where(:trip_id => trip.id).present?
   end
 
   def full_name
@@ -84,12 +87,16 @@ class User < ActiveRecord::Base
     end
 
     def invited_for_trip
-      @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first if auth_hash
+      if auth_hash
+        @trip ||= FbInvitee.where(:invitee_uid => auth_hash.uid).first
+      else
+        User.current_trip
+      end
     end
 
 
     def associate_user_to_trip
-      invite = if current_trip
+      invite = if User.current_trip
         invitations.build(:trip_id => User.current_trip.id)
       else
         invitations.build(:trip_id => invited_for_trip.trip_id)
