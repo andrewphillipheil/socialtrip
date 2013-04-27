@@ -7,15 +7,16 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-	<div class="header">
-      <%= render 'shared/header' %>
-		</div>
+  <div id="wrap">
+    <%= render 'shared/header' %>
     <div class="container">
        <%= flash_message %>
-      <div class="row" style="margin-top:100px;">
+      <div class="row content">
 				<%= yield %>
 			</div>
 		</div>
-
+    <div class="clearfix"></div>
+  </div>  
+  <%#= render 'shared/footer' %>
 </body>
 </html>
