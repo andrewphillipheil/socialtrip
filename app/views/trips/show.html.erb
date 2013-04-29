@@ -18,7 +18,7 @@
   </tr>
   <tr>
     <td>Members:</td>
-    <td><%= (@trip.users.collect &:full_name).join(", ") %></td>
+    <td><%= @trip.members %></td>
   </tr>
 </table>
 
@@ -32,7 +32,11 @@
       <%= text_field_tag :invite_friends, nil, :id => 'fb-friends', :placeholder => "Type in friend's name" %>
     <% end %>
 
-    <div id='email-invitation'><%= link_to  "Invite friends to this trip", new_user_invitation_path(:trip_id => @trip.id), :id => 'invite_by_email' %></div>
+    <div id='email-invitation'>
+      <%= link_to  "Invite friends to this trip", "javascript:void", :id => 'invite_by_email' %>
+      <div class="email-invitation-form">
+      </div>
+    </div>
   </div>
 <% end %>
 
@@ -53,10 +57,32 @@
   <% end %>
 </div>
 
-
 <% if current_user.has_signed_up_using_fb?  %>
   <script>
     $(function(){
+      
+      $('#invite_by_email').click(function(){
+        $.ajax({
+          url: "<%= new_invitation_path(:trip_id => @trip.id) %>",
+          dataType: 'json',
+          method: 'get',
+
+          success: function(data, textStatus, jqXHR) {
+    			  if (jqXHR.status == 200){
+    			    $('.email-invitation-form').html(data.tmplt);
+              $('#email_ids').tagsInput({
+                'defaultText':'Enter comma seprated email ids',
+                'width' : '500px',
+                'height' : '170px'
+              });
+
+              $('#email_ids_tag').width('195px');    			    
+    			  }
+    			}
+        });
+      });
+      
+      
       invited_uids = "<%= @trip.collect_uids %>";
 
       FB.init({

@@ -19,13 +19,6 @@
 $(function(){
   $(".datepicker").datepicker({dateFormat: "dd/mm/yy" });
 
-  $('#email_ids').tagsInput({
-    'defaultText':'Enter comma seprated email ids',
-    'width' : '500px',
-    'height' : '170px'
-  });
-
-  $('#email_ids_tag').width('190px');
 });
 
 var set_csrf_token = function(xhr){

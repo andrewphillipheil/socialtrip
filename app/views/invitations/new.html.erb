@@ -1,0 +1,13 @@
+<h2><%= t "devise.invitations.new.header" %></h2>(All invalid email ids will be rejected)
+
+<%= form_for resource, :as => resource_name, :url => batch_invitation_path, :html => {:method => :post} do |f| %>
+  <%= f.hidden_field :trip_id, :value => params[:trip_id] %>
+  <%= devise_error_messages! %>
+
+
+	<% resource.class.invite_key_fields.each do |field| -%>
+	  <%= f.text_field field, :id => 'email_ids' %></p>
+	<% end -%>
+
+  <p><%= f.submit t("devise.invitations.new.submit_button") %></p>
+<% end %>

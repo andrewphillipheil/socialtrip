@@ -15,6 +15,7 @@ Socialtrip::Application.routes.draw do
 
   devise_for :users, :controllers => { :invitations => 'invitations' } do
     post  "/users/invitation/batch_invite" => "invitations#batch_invite", :as => "batch_invitation"
+    get "users/invitations/new" => "invitations#new", :as => "new_invitation"
   end
 
   # match "users/invitation/new" => "invitations#new", :via => :get

@@ -36,6 +36,10 @@ class Trip < ActiveRecord::Base
   def facebook_invitees_name
     (users.select{|u| u.providers.where(:user_provider => 'facebook').present?}.collect(&:full_name) + FbInvitee.where(:trip_id => id).collect(&:name)).uniq
   end
+  
+  def members
+    users.select{|u| u.full_name.present?}.collect(&:full_name).flatten.join(',')
+  end
 
   private
 

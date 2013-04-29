@@ -1,4 +1,17 @@
 class InvitationsController < Devise::InvitationsController
+  def new
+    build_resource
+    data = {}
+    
+    respond_to do |format|
+      format.json {    
+        data[:tmplt] = render_to_string(:file => "#{Rails.root}/app/views/invitations/new.html", :layout => false)
+        render json: data, status: 200        
+      }
+    end
+  end
+  
+  
   def batch_invite
     trip = Trip.where(:id => params[:user][:trip_id]).first
 
